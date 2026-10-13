@@ -1,20 +1,35 @@
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import DetailScreen from './src/screens/DetailScreen';
+import ListScreen from './src/screens/ListScreen';
+import { colors } from './src/theme';
+import type { RootStackParamList } from './src/types';
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <StatusBar style="dark" />
+        <Stack.Navigator
+          screenOptions={{
+            headerStyle: { backgroundColor: colors.bg },
+            headerTintColor: colors.text,
+            headerShadowVisible: false,
+            contentStyle: { backgroundColor: colors.bg },
+          }}
+        >
+          <Stack.Screen name="List" component={ListScreen} options={{ title: 'Recipes' }} />
+          <Stack.Screen
+            name="Detail"
+            component={DetailScreen}
+            options={({ route }) => ({ title: route.params.recipe.name, headerBackTitle: 'Back' })}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
